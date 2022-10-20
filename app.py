@@ -40,7 +40,18 @@ def password_check(passwd):
 
 @app.route('/')
 def index():
-    return 'Hello World'
+  '''
+    Lista los usuarios
+  '''
+  users = []
+  for doc in db_user.find():
+      users.append({
+          '_id': str(ObjectId(doc['_id'])),
+          'username': doc['username'],
+          'email': doc['email'],
+          'password': doc['password']
+      })
+  return jsonify(users)
   
 @app.route('/add', methods=['POST'])
 def create_user():
@@ -251,3 +262,6 @@ def deleteSpreadsheet(user_id, spread_id):
 
 if __name__ == '__main__':
     app.run(debug=False)
+    
+    
+    
