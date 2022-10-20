@@ -1,3 +1,4 @@
+
 from flask import Flask, request, Response, jsonify
 import database as dbase  # import database.py
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -261,7 +262,7 @@ def deleteSpreadsheet(user_id, spread_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(threaded=True, port=5000)
     
     
     
