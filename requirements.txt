@@ -7,3 +7,4 @@ faker
 werkzeug
 bson
 certifi
+gunicorn
