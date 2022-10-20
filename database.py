@@ -1,13 +1,7 @@
 from pymongo import MongoClient
 import certifi
-from dotenv import load_dotenv
-import os
 
-
-load_dotenv()
-
-MONGO_URI = f'mongodb+srv://vEzzel:{os.environ.get("password")}'\
-    '@vezzel.lgiwpov.mongodb.net/?retryWrites=true&w=majority'
+MONGO_URI = 'mongodb+srv://vEzzel:v3zzel_Web_Company@vezzel.lgiwpov.mongodb.net/?retryWrites=true&w=majority'
 ca = certifi.where()
 
 def dbConnection():
