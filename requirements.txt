@@ -1,0 +1,9 @@
+Flask
+pymongo
+pymongo[srv]
+Flask-PyMongo
+Flask-Cors
+faker
+werkzeug
+bson
+certifi
