@@ -1,5 +1,5 @@
 from http import client
-from flask import Flask, request, Response, jsonify
+from flask import Flask, request, Response, jsonify, render_template
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from bson.objectid import ObjectId
@@ -47,7 +47,7 @@ def index():
   '''
     Index
   '''
-  return '<h1>API vEzzel</h1>'
+  return render_template('home.html')
 
 @app.route('/getall', methods=['POST'])
 def getAll():
@@ -210,7 +210,7 @@ def saveSpreadsheet(id):
     tags = request.json['tags']
     tracker = request.json['tracker']
     
-    spreadsheet = Spreadsheet(id,name, description, content, tags, tracker)
+    spreadsheet = Spreadsheet(str(id),name, description, content, tags, tracker)
     s_id = db_spreadsheet.insert_one(spreadsheet.toDBCollection()).inserted_id
     
     response = jsonify({
