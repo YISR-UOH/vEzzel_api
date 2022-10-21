@@ -226,22 +226,21 @@ def saveSpreadsheet(id):
     return response
   return jsonify({'message': 'El usuario no existe'})
 
-@app.route('/spreadsheet_edit/<id>', methods=['POST'])
+@app.route('/spreadsheet_edit/<id>/<spread_id>', methods=['POST'])
 def editSpreadsheet(user_id, spread_id):
   '''
     Edita un spreadsheet
   '''
   
   if db_user.find_one({'_id':ObjectId(user_id)}):
-    if db_spreadsheet.find_one({'_id':ObjectId(spread_id)}):
+    if db_spreadsheet.find_one({'_id':ObjectId(spread_id), 'user_id':ObjectId(user_id)}):
       #verify if the user and spreadsheet exists
       name = request.json['name']
       description = request.json['description']
       content = request.json['content']
       tags = request.json['tags']
-      tracker = request.json['tracker']
       
-      db_spreadsheet.update_one({'_id':ObjectId(spread_id)}, {'$set': {'name': name, 'description': description, 'content': content, 'tags': tags, 'tracker': tracker}})
+      db_spreadsheet.update_one({'_id':ObjectId(spread_id)}, {'$set': {'name': name, 'description': description, 'content': content, 'tags': tags}})
       
       
       return jsonify({'message': 'El Spreadsheet ha sido actualizado'})
@@ -252,14 +251,14 @@ def editSpreadsheet(user_id, spread_id):
     return jsonify({'message': 'El usuario no existe'})
 
 
-@app.route('/spreadsheet_delete/<id>', methods=['POST'])
+@app.route('/spreadsheet_delete/<id>/<spread_id>', methods=['POST'])
 def deleteSpreadsheet(user_id, spread_id):
   '''
     Elimina un spreadsheet
   '''
   
   if db_user.find_one({'_id':ObjectId(user_id)}):
-    if db_spreadsheet.find_one({'_id':ObjectId(spread_id)}):
+    if db_spreadsheet.find_one({'_id':ObjectId(spread_id), 'user_id':ObjectId(user_id)}):
       #verify if the user and spreadsheet exists
       db_spreadsheet.delete_one({'_id':ObjectId(spread_id)})
       return jsonify({'message': 'El Spreadsheet ha sido eliminado'})
