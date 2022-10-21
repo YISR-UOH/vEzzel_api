@@ -1,14 +1,17 @@
 from flask import Flask, request, Response, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from database import dbase
+
 from bson.objectid import ObjectId
 from api.user import User
 from api.spreadsheet import Spreadsheet
-
+from pymongo import MongoClient
+import os
 
 
 app = Flask(__name__)
-db = dbase.dbConnection()  # dbConnection() is a function from database.py
+MONGO_URI = os.getenv("MONGODB_URI")
+client = MongoClient(MONGO_URI)
+db = client.vEzzel
 db_spreadsheet = db['spreadsheet']
 db_user = db['test']
 
