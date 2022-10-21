@@ -47,7 +47,7 @@ def index():
   '''
     Index
   '''
-  return render_template('home.html')
+  return '<h1>vEzzel API</h1>'
 
 @app.route('/getall', methods=['POST'])
 def getAll():
