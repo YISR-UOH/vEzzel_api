@@ -1,3 +1,4 @@
+from http import client
 from flask import Flask, request, Response, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -11,7 +12,8 @@ import os
 app = Flask(__name__)
 MONGO_URI = os.getenv("MONGODB_URI")
 print(MONGO_URI)
-db = MongoClient(MONGO_URI)
+client = MongoClient(MONGO_URI)
+db = client.vEzzel
 db_spreadsheet = db['spreadsheet']
 db_user = db['test']
 
