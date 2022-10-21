@@ -37,5 +37,6 @@ def index():
   return response.text
 
 if __name__ == '__main__':
-    app.run(threaded=True, port=5000)
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=8080)
     
