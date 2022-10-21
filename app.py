@@ -233,7 +233,7 @@ def editSpreadsheet(id, spread_id):
   '''
   
   if db_user.find_one({'_id':ObjectId(id)}):
-    if db_spreadsheet.find_one({'_id':ObjectId(spread_id), 'user_id':ObjectId(id)}):
+    if db_spreadsheet.find_one({'_id':ObjectId(spread_id), 'user_id':str(id)}):
       #verify if the user and spreadsheet exists
       name = request.json['name']
       description = request.json['description']
@@ -258,7 +258,7 @@ def deleteSpreadsheet(id, spread_id):
   '''
   
   if db_user.find_one({'_id':ObjectId(id)}):
-    if db_spreadsheet.find_one({'_id':ObjectId(spread_id), 'user_id':ObjectId(id)}):
+    if db_spreadsheet.find_one({'_id':ObjectId(spread_id), 'user_id':str(id)}):
       #verify if the user and spreadsheet exists
       db_spreadsheet.delete_one({'_id':ObjectId(spread_id)})
       return jsonify({'message': 'El Spreadsheet ha sido eliminado'})
