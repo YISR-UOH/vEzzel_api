@@ -10,8 +10,8 @@ import os
 
 app = Flask(__name__)
 MONGO_URI = os.getenv("MONGODB_URI")
-client = MongoClient(MONGO_URI)
-db = client.vEzzel
+print(MONGO_URI)
+db = MongoClient(MONGO_URI)
 db_spreadsheet = db['spreadsheet']
 db_user = db['test']
 
