@@ -1,7 +1,6 @@
 import requests
 import json
 from flask import Flask, request, Response, jsonify
-import database as dbase  # import database.py
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from bson.objectid import ObjectId
