@@ -42,6 +42,13 @@ def index():
   '''
     Lista los usuarios
   '''
+  return '<h1>API vEzzel</h1>'
+
+@app.route('/getall', methods=['POST'])
+def getAll():
+  '''
+    Lista los usuarios
+  '''
   users = []
   for doc in db_user.find():
       users.append({
@@ -260,5 +267,5 @@ def deleteSpreadsheet(user_id, spread_id):
 
 
 if __name__ == '__main__':
-    app.run(threaded=True, port=5000)
+    app.run(debug=True,threaded=True, port=5000)
     
