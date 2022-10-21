@@ -45,7 +45,7 @@ def password_check(passwd):
 @app.route('/')
 def index():
   '''
-    Lista los usuarios
+    Index
   '''
   return '<h1>API vEzzel</h1>'
 
