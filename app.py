@@ -216,7 +216,7 @@ def saveSpreadsheet(id):
     response = jsonify({
         '_id': str(s_id),
         'name': name,
-        'user_id': id,
+        'user_id': str(id),
         'description': description,
         'content': content,
         'tags': tags,
