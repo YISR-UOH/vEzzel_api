@@ -220,7 +220,8 @@ def saveSpreadsheet(id):
     description = request.json['description']
     content = request.json['content']
     tags = request.json['tags']
-    username = request.json['username']
+    username = db_user.find_one({'_id':ObjectId(id)})['username']
+    
     spreadsheet = Spreadsheet(str(id),name, description, content, tags, username)
     s_id = db_spreadsheet.insert_one(spreadsheet.toDBCollection()).inserted_id
     
