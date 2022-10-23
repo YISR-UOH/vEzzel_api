@@ -274,6 +274,7 @@ def searchSpreadsheet_name():
     Busca un spreadsheet por nombre y/o tags
   '''
   name,tags = False,False
+  #tiene que devolver todo por default
   response = []
   
   if 'name' in request.json:
@@ -333,7 +334,8 @@ def searchSpreadsheet_name():
           'description': s['description'],
           'content': s['content'],
           'tags': s['tags'],
-          'tracker': s['tracker']
+          'tracker': s['tracker'],
+          "time":s["s"]
       })
       
   return jsonify(response)
