@@ -1,6 +1,5 @@
 from http import client
 from flask import Flask, request, Response, jsonify, render_template
-from sqlalchemy import false, true
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 from bson.objectid import ObjectId
