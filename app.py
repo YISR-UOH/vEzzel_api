@@ -11,8 +11,8 @@ import os
 
 
 app = Flask(__name__)
-MONGO_URI = 'mongodb+srv://vEzzel:v3zzel_Web_Company@vezzel.lgiwpov.mongodb.net/?retryWrites=true&w=majority'
-print(MONGO_URI)
+MONGO_URI = os.getenv("MONGODB_URI")
+
 client = MongoClient(MONGO_URI)
 db = client.vEzzel
 db_spreadsheet = db['spreadsheet']
