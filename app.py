@@ -87,7 +87,7 @@ def create_user():
     msg["error_user"]="El nombre de usuario ya existe"
     
   if val == False:
-    return jsonify(msg)
+    return error_response(401, msg)
   
   pass_strong = password_check(password)
   
@@ -107,7 +107,7 @@ def create_user():
     return response
   
   else:
-    return jsonify(pass_strong)
+    return error_response(401, pass_strong)
 
 @app.route('/edit_user/<id>', methods=['POST'])
 def edit_user_name(id):
