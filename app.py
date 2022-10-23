@@ -349,7 +349,7 @@ def error_response(error,msg):
   '''
   message = {
       'status': error,
-      'message': msg+' ' + request.url,
+      'message': msg
   }
   resp = jsonify(message)
   resp.status_code = error
