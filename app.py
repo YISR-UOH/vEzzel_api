@@ -341,5 +341,5 @@ def searchSpreadsheet_name():
 
 
 if __name__ == '__main__':
-    app.run(debug=true, threaded=True, port=5000)
+    app.run(threaded=True, port=5000)
     
