@@ -1,5 +1,6 @@
 from distutils.log import error
 from http import client
+from urllib import response
 from flask import Flask, request, Response, jsonify, render_template
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
@@ -170,7 +171,9 @@ def login():
   if db_user.find_one({'email':email}) and check_password_hash(db_user.find_one({'email':email})['password'],password):
     #verify if the email and password are correct
     id = db_user.find_one({'email':email})['_id']
-    return jsonify({'id': str(id)})
+    response = jsonify({'id': str(id)})
+    response.status_code = 200
+    return response
   
   else:
     return error_response(401, 'Usuario o contraseña incorrectos')
