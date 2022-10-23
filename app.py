@@ -1,3 +1,4 @@
+from distutils.log import error
 from http import client
 from flask import Flask, request, Response, jsonify, render_template
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -172,7 +173,7 @@ def login():
     return jsonify({'id': str(id)})
   
   else:
-    return jsonify({'message': 'El correo o la contraseña son incorrectos'})
+    return error_response(401, 'Usuario o contraseña incorrectos')
 
 @app.route('/spreadsheet/<id>', methods=['POST'])
 def getSpreadsheet(id):
@@ -340,6 +341,20 @@ def searchSpreadsheet_name():
       
   return jsonify(response)
 
+
+
+def error_response(error,msg):
+  '''
+    Error 401 - Unauthorized Access 
+  '''
+  message = {
+      'status': error,
+      'message': msg+' ' + request.url,
+  }
+  resp = jsonify(message)
+  resp.status_code = error
+
+  return resp
 
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
