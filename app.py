@@ -200,8 +200,7 @@ def getSpreadsheet(id):
           'description': s['description'],
           'content': s['content'],
           'tags': s['tags'],
-          'tracker': s['tracker'],
-          'status': 200
+          'tracker': s['tracker']
       })
     response = jsonify(response)
     response.status_code = 200
