@@ -1,5 +1,7 @@
+from datetime import datetime
+
 class Spreadsheet:
-  def __init__(self,user_id, name,description,content,tags,tracker):
+  def __init__(self,user_id, name,description,content,tags,username):
     '''
       Constructor de la clase Spreadsheet
     '''
@@ -8,7 +10,8 @@ class Spreadsheet:
     self.description = description
     self.content = content
     self.tags = tags
-    self.tracker = tracker
+    self.username = username,
+    self.last_modified = datetime.datetime.now()
   
   def toDBCollection(self):
     '''
@@ -20,5 +23,6 @@ class Spreadsheet:
       "description": self.description,
       "content": self.content,
       "tags": self.tags,
-      "tracker": self.tracker
+      "username": self.username,
+      "last_modified": self.last_modified
     }

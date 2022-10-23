@@ -10,7 +10,7 @@ from api.user import User
 from api.spreadsheet import Spreadsheet
 from pymongo import MongoClient
 import os
-
+from datetime import datetime
 
 app = Flask(__name__)
 MONGO_URI = os.getenv("MONGODB_URI")
@@ -79,6 +79,7 @@ def create_user():
   email = request.json['email']
   password = request.json['password']
   
+  
   if db_user.find_one({'email': email}):
     #verify if the email already exists
     msg["error_email"] = "El correo ya existe"
@@ -98,7 +99,7 @@ def create_user():
     #verify if the password is strong  
     if username and email and password:
       hashed_password = generate_password_hash(password)
-      user = User(username, email, hashed_password)
+      user = User(username, email, hashed_password,'')
       id = db_user.insert_one(user.toDBCollection()).inserted_id
       response = jsonify({
           'id': str(id),
@@ -200,7 +201,8 @@ def getSpreadsheet(id):
           'description': s['description'],
           'content': s['content'],
           'tags': s['tags'],
-          'tracker': s['tracker']
+          'username': s['username'],
+          'last_modified': s['last_modified']
       })
     response = jsonify(response)
     response.status_code = 200
@@ -218,10 +220,11 @@ def saveSpreadsheet(id):
     description = request.json['description']
     content = request.json['content']
     tags = request.json['tags']
-    tracker = request.json['tracker']
-    
-    spreadsheet = Spreadsheet(str(id),name, description, content, tags, tracker)
+    username = request.json['username']
+    spreadsheet = Spreadsheet(str(id),name, description, content, tags, username)
     s_id = db_spreadsheet.insert_one(spreadsheet.toDBCollection()).inserted_id
+    
+    db_user.update_one({'_id':ObjectId(id)}, {'$set': {'last_modified': str(s_id)}})
     
     msg = 'El Spreadsheet ha sido guardado'
     return good_response(msg)
@@ -241,7 +244,10 @@ def editSpreadsheet(id, spread_id):
       content = request.json['content']
       tags = request.json['tags']
       
-      db_spreadsheet.update_one({'_id':ObjectId(spread_id)}, {'$set': {'name': name, 'description': description, 'content': content, 'tags': tags}})
+      db_spreadsheet.update_one({'_id':ObjectId(spread_id)}, {'$set': {'name': name, 'description': description, 'content': content, 'tags': tags, "last_modified": datetime.now()}})
+      
+      db_user.update_one({'_id':ObjectId(id)}, {'$set': {'last_modified': str(spread_id)}})
+      
       return good_response('El Spreadsheet ha sido actualizado')
     else:
       return error_response(401, 'El Spreadsheet no existe')
@@ -260,6 +266,10 @@ def deleteSpreadsheet(id, spread_id):
     if db_spreadsheet.find_one({'_id':ObjectId(spread_id), 'user_id':str(id)}):
       #verify if the user and spreadsheet exists
       db_spreadsheet.delete_one({'_id':ObjectId(spread_id)})
+      
+      if db_user.find_one({'_id':ObjectId(id)})['last_modified'] == str(spread_id):
+        db_user.update_one({'_id':ObjectId(id)}, {'$set': {'last_modified': ''}})
+      
       msg = 'El Spreadsheet ha sido eliminado'
       return good_response(msg)
     else:
@@ -333,8 +343,7 @@ def searchSpreadsheet_name():
           'description': s['description'],
           'content': s['content'],
           'tags': s['tags'],
-          'tracker': s['tracker'],
-          "time":str(s["s"])
+          "last_modified":str(s["last_modified"])
       })
   
   response = jsonify(response)
@@ -371,5 +380,3 @@ def good_response(msg):
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
 
-
-#Primer_registro0
