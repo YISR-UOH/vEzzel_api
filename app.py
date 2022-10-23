@@ -100,10 +100,7 @@ def create_user():
       user = User(username, email, hashed_password)
       id = db_user.insert_one(user.toDBCollection()).inserted_id
       response = jsonify({
-          'id': str(id),
-          'username': username,
-          'password': password,
-          'email': email
+          'id': str(id)
       })
       response.status_code = 200
     return response
@@ -374,4 +371,6 @@ def error_response(error,msg):
 
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
-    
+
+
+#Primer_registro0
