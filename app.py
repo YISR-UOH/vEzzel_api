@@ -81,10 +81,12 @@ def create_user():
   if db_user.find_one({'email': email}):
     #verify if the email already exists
     msg["error_email"] = "El correo ya existe"
+    val = False
     
   if db_user.find_one({'username': username}):
     #verify if the username already exists
     msg["error_user"]="El nombre de usuario ya existe"
+    val = False
     
   if val == False:
     return error_response(401, msg)
@@ -98,12 +100,12 @@ def create_user():
       user = User(username, email, hashed_password)
       id = db_user.insert_one(user.toDBCollection()).inserted_id
       response = jsonify({
-          '_id': str(id),
+          'id': str(id),
           'username': username,
           'password': password,
           'email': email
       })
-      response.status_code = 201
+      response.status_code = 200
     return response
   
   else:
@@ -118,13 +120,15 @@ def edit_user_name(id):
     username = request.json['username']
     if username == db_user.find_one({'_id':  ObjectId(id)})['username']:
       #verify if the username is the same
-      return jsonify({'message': 'El nombre de usuario no puede ser el mismo'})
+      return error_response(401, 'El nombre de usuario no puede ser el mismo')
     if username == db_user.find_one({'username': username}):
       #verify if the username already exists
-      return jsonify({'message': 'El nombre de usuario ya existe'})
+      return error_response(401, 'El nombre de usuario ya existe')
     else:
       db_user.update_one({'_id':ObjectId(id)}, {'$set': {'username': username}})
-      return jsonify({'message': 'El nombre de usuario ha sido actualizado'})
+      response = jsonify({'message': 'El nombre de usuario ha sido actualizado'})
+      response.status_code = 200
+      return response
     
 @app.route('/edit_pass/<id>', methods=['POST'])
 def edit_user_pass(id):
@@ -134,15 +138,17 @@ def edit_user_pass(id):
   password = request.json['password']
   if check_password_hash(db_user.find_one({'_id':ObjectId(id)})['password'],password):
     #verify if the password is the same
-    return jsonify({'message': 'La contraseña no puede ser la misma'})
+    return error_response(401,'La contraseña no puede ser la misma')
   pass_strong = password_check(password)
   if pass_strong==True:
     #verify if the password is strong
     hashed_password = generate_password_hash(password)
     db_user.update_one({'_id':ObjectId(id)}, {'$set': {'password': hashed_password}})
-    return jsonify({'message': 'La contraseña ha sido actualizada'})
+    response = jsonify({'message': 'La contraseña ha sido actualizada'})
+    response.status_code = 200
+    return response
   else:
-    return jsonify({'message': pass_strong}) 
+    return error_response(401, pass_strong) 
 
 
 @app.route('/edit_email/<id>', methods=['POST'])  
@@ -153,13 +159,15 @@ def edit_user_email(id):
   email = request.json['email']
   if email == db_user.find_one({'_id':ObjectId(id)})['email']:
     #verify if the email is the same
-    return jsonify({'message': 'El correo no puede ser el mismo'})
+    return error_response(401,'El correo no puede ser el mismo')
   if email == db_user.find_one({'email': email}): 
     #verify if the email already exists
-    return jsonify({'message': 'El correo ya existe'})
+    return error_response(401, 'El correo ya existe')
   else:
     db_user.update_one({'_id':ObjectId(id)}, {'$set': {'email': email}})
-    return jsonify({'message': 'El correo ha sido actualizado'})
+    response = jsonify({'message': 'El correo ha sido actualizado'})
+    response.status_code = 200
+    return response
   
 @app.route("/login", methods=["POST"])
 def login():
@@ -197,9 +205,10 @@ def getSpreadsheet(id):
           'tags': s['tags'],
           'tracker': s['tracker']
       })
-      
-    return jsonify(response)
-  return jsonify({'message': 'El usuario no tiene Spreadsheet'})
+    response = jsonify(response)
+    response.status_code = 200
+    return response
+  return error_response(401, 'El usuario no tiene Spreadsheet')
   
 @app.route('/spreadsheet_save/<id>', methods=['POST'])
 def saveSpreadsheet(id):
@@ -218,7 +227,7 @@ def saveSpreadsheet(id):
     s_id = db_spreadsheet.insert_one(spreadsheet.toDBCollection()).inserted_id
     
     response = jsonify({
-        '_id': str(s_id),
+        'id': str(s_id),
         'name': name,
         'user_id': str(id),
         'description': description,
@@ -226,9 +235,9 @@ def saveSpreadsheet(id):
         'tags': tags,
         'tracker': tracker
     })
-    response.status_code = 201
+    response.status_code = 200
     return response
-  return jsonify({'message': 'El usuario no existe'})
+  return error_response(401, 'El usuario no existe')
 
 @app.route('/spreadsheet_edit/<id>/<spread_id>', methods=['POST'])
 def editSpreadsheet(id, spread_id):
@@ -245,14 +254,15 @@ def editSpreadsheet(id, spread_id):
       tags = request.json['tags']
       
       db_spreadsheet.update_one({'_id':ObjectId(spread_id)}, {'$set': {'name': name, 'description': description, 'content': content, 'tags': tags}})
+      response = jsonify({'message': 'El Spreadsheet ha sido actualizado'})
+      response.status_code = 200
       
-      
-      return jsonify({'message': 'El Spreadsheet ha sido actualizado'})
+      return response
     else:
-      return jsonify({'message': 'El Spreadsheet no existe'})
+      return error_response(401, 'El Spreadsheet no existe')
   
   else:
-    return jsonify({'message': 'El usuario no existe'})
+    return error_response(401, 'El usuario no existe')
 
 
 @app.route('/spreadsheet_delete/<id>/<spread_id>', methods=['POST'])
@@ -265,12 +275,14 @@ def deleteSpreadsheet(id, spread_id):
     if db_spreadsheet.find_one({'_id':ObjectId(spread_id), 'user_id':str(id)}):
       #verify if the user and spreadsheet exists
       db_spreadsheet.delete_one({'_id':ObjectId(spread_id)})
-      return jsonify({'message': 'El Spreadsheet ha sido eliminado'})
+      response = jsonify({'message': 'El Spreadsheet ha sido eliminado'})
+      response.status_code = 200
+      return response
     else:
-      return jsonify({'message': 'El Spreadsheet no existe'})
+      return error_response(401, 'El Spreadsheet no existe')
   
   else:
-    return jsonify({'message': 'El usuario no existe'})
+    return error_response(401, 'El usuario no existe')
 
 @app.route('/spreadsheet_search', methods=['POST'])
 def searchSpreadsheet_name():
@@ -341,8 +353,9 @@ def searchSpreadsheet_name():
           'tracker': s['tracker'],
           "time":str(s["s"])
       })
-      
-  return jsonify(response)
+  response = jsonify(response)
+  response.status_code = 200
+  return response
 
 
 
