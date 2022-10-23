@@ -103,7 +103,8 @@ def create_user():
           'id': str(id)
       })
       response.status_code = 200
-    return response
+      response['status'] = 200
+      return response
   
   else:
     return error_response(401, pass_strong)
@@ -125,6 +126,7 @@ def edit_user_name(id):
       db_user.update_one({'_id':ObjectId(id)}, {'$set': {'username': username}})
       response = jsonify({'message': 'El nombre de usuario ha sido actualizado'})
       response.status_code = 200
+      response['status'] = 200
       return response
     
 @app.route('/edit_pass/<id>', methods=['POST'])
@@ -143,6 +145,7 @@ def edit_user_pass(id):
     db_user.update_one({'_id':ObjectId(id)}, {'$set': {'password': hashed_password}})
     response = jsonify({'message': 'La contraseña ha sido actualizada'})
     response.status_code = 200
+    response['status'] = 200
     return response
   else:
     return error_response(401, pass_strong) 
@@ -164,6 +167,7 @@ def edit_user_email(id):
     db_user.update_one({'_id':ObjectId(id)}, {'$set': {'email': email}})
     response = jsonify({'message': 'El correo ha sido actualizado'})
     response.status_code = 200
+    response['status'] = 200
     return response
   
 @app.route("/login", methods=["POST"])
@@ -178,6 +182,7 @@ def login():
     id = db_user.find_one({'email':email})['_id']
     response = jsonify({'id': str(id)})
     response.status_code = 200
+    response['status'] = 200
     return response
   
   else:
@@ -204,6 +209,7 @@ def getSpreadsheet(id):
       })
     response = jsonify(response)
     response.status_code = 200
+    response['status'] = 200
     return response
   return error_response(401, 'El usuario no tiene Spreadsheet')
   
@@ -233,6 +239,7 @@ def saveSpreadsheet(id):
         'tracker': tracker
     })
     response.status_code = 200
+    response['status'] = 200
     return response
   return error_response(401, 'El usuario no existe')
 
@@ -253,7 +260,7 @@ def editSpreadsheet(id, spread_id):
       db_spreadsheet.update_one({'_id':ObjectId(spread_id)}, {'$set': {'name': name, 'description': description, 'content': content, 'tags': tags}})
       response = jsonify({'message': 'El Spreadsheet ha sido actualizado'})
       response.status_code = 200
-      
+      response['status'] = 200
       return response
     else:
       return error_response(401, 'El Spreadsheet no existe')
@@ -274,6 +281,7 @@ def deleteSpreadsheet(id, spread_id):
       db_spreadsheet.delete_one({'_id':ObjectId(spread_id)})
       response = jsonify({'message': 'El Spreadsheet ha sido eliminado'})
       response.status_code = 200
+      response['status'] = 200
       return response
     else:
       return error_response(401, 'El Spreadsheet no existe')
@@ -313,7 +321,6 @@ def searchSpreadsheet_name():
           'tracker': s['tracker']
       })
     
-
   elif name == False and tags != False:
     spreadsheet = db_spreadsheet.find(
       filter={'tags':{
@@ -351,6 +358,7 @@ def searchSpreadsheet_name():
           "time":str(s["s"])
       })
   response = jsonify(response)
+  response['status'] = 200
   response.status_code = 200
   return response
 
