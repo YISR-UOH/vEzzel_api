@@ -244,8 +244,9 @@ def editSpreadsheet(id, spread_id):
       description = request.json['description']
       content = request.json['content']
       tags = request.json['tags']
-      
-      db_spreadsheet.update_one({'_id':ObjectId(spread_id)}, {'$set': {'name': name, 'description': description, 'content': content, 'tags': tags, "last_modified": datetime.now()}})
+      now = datetime.now()
+      date_time = now.strftime("%Y%m%d%H%M%S")
+      db_spreadsheet.update_one({'_id':ObjectId(spread_id)}, {'$set': {'name': name, 'description': description, 'content': content, 'tags': tags, "last_modified": date_time}})
       
       db_user.update_one({'_id':ObjectId(id)}, {'$set': {'last_modified': str(spread_id)}})
       
