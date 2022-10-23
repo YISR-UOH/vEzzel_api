@@ -335,7 +335,7 @@ def searchSpreadsheet_name():
           'content': s['content'],
           'tags': s['tags'],
           'tracker': s['tracker'],
-          "time":s["s"]
+          "time":str(s["s"])
       })
       
   return jsonify(response)
