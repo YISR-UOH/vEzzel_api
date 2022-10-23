@@ -1,7 +1,8 @@
 from http import client
 from flask import Flask, request, Response, jsonify, render_template
+from sqlalchemy import false, true
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import re
 from bson.objectid import ObjectId
 from api.user import User
 from api.spreadsheet import Spreadsheet
@@ -10,7 +11,7 @@ import os
 
 
 app = Flask(__name__)
-MONGO_URI = os.getenv("MONGODB_URI")
+MONGO_URI = 'mongodb+srv://vEzzel:v3zzel_Web_Company@vezzel.lgiwpov.mongodb.net/?retryWrites=true&w=majority'
 print(MONGO_URI)
 client = MongoClient(MONGO_URI)
 db = client.vEzzel
@@ -268,8 +269,77 @@ def deleteSpreadsheet(id, spread_id):
   else:
     return jsonify({'message': 'El usuario no existe'})
 
+@app.route('/spreadsheet_search', methods=['POST'])
+def searchSpreadsheet_name():
+  '''
+    Busca un spreadsheet por nombre y/o tags
+  '''
+  name,tags = False,False
+  response = []
+  
+  if 'name' in request.json:
+    #verify if recive the name
+    name = request.json['name']
+  
+  if 'tags' in request.json:
+    #verify if recive the tags
+    tags = request.json['tags']
+    
+  if name != False and tags == False:
+    spreadsheet = db_spreadsheet.find(
+      filter={'name': re.compile(name, re.IGNORECASE)}
+    )
+    for s in spreadsheet:
+      response.append({
+          '_id': str(s['_id']),
+          'name': s['name'],
+          'user_id': s['user_id'],
+          'description': s['description'],
+          'content': s['content'],
+          'tags': s['tags'],
+          'tracker': s['tracker']
+      })
+    
+
+  elif name == False and tags != False:
+    spreadsheet = db_spreadsheet.find(
+      filter={'tags':{
+        '$all':[re.compile(i,re.IGNORECASE) for i in tags]  
+        }}
+    )
+    for s in spreadsheet:
+      response.append({
+          '_id': str(s['_id']),
+          'name': s['name'],
+          'user_id': s['user_id'],
+          'description': s['description'],
+          'content': s['content'],
+          'tags': s['tags'],
+          'tracker': s['tracker']
+      }) 
+
+  elif name != False and tags != False:
+    spreadsheet = db_spreadsheet.find(
+      filter={
+        'name': re.compile(name, re.IGNORECASE),
+        'tags':{
+        '$all':[re.compile(i,re.IGNORECASE) for i in tags]  
+        }}
+    )
+    for s in spreadsheet:
+      response.append({
+          '_id': str(s['_id']),
+          'name': s['name'],
+          'user_id': s['user_id'],
+          'description': s['description'],
+          'content': s['content'],
+          'tags': s['tags'],
+          'tracker': s['tracker']
+      })
+      
+  return jsonify(response)
 
 
 if __name__ == '__main__':
-    app.run(threaded=True, port=5000)
+    app.run(debug=true, threaded=True, port=5000)
     
