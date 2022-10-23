@@ -337,7 +337,7 @@ def searchSpreadsheet_name():
           'tracker': s['tracker'],
           "time":str(s["s"])
       })
-  response.append({'status': 200})
+  
   response = jsonify(response)
   response.status_code = 200
   return response
