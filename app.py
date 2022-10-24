@@ -28,6 +28,9 @@ db = client.vEzzel
 db_spreadsheet = db['spreadsheet']
 db_user = db['test']
 
+sort=list({
+    'last_modified': -1
+}.items())
 
 def password_check(passwd):
     val = True
@@ -198,7 +201,7 @@ def getSpreadsheet(id):
   '''
   if db_user.find_one({'_id':ObjectId(id)}):
     #verify if the user exists
-    spreadsheet = db_spreadsheet.find({'user_id':id})
+    spreadsheet = db_spreadsheet.find(filter={'user_id':id},sort=sort)
     response = []
     for s in spreadsheet:
       response.append({
@@ -306,16 +309,20 @@ def searchSpreadsheet_name():
     
   if name != False and tags == False:
     spreadsheet = db_spreadsheet.find(
-      filter={'name': re.compile(name, re.IGNORECASE)}
+      filter={'name': {
+        '$regex': name, 
+        '$options': 'i'
+    }},
+      sort=sort
     )
     
   elif name == False and tags != False:
     spreadsheet = db_spreadsheet.find(
       filter={'tags':{
         '$all':[re.compile(i,re.IGNORECASE) for i in tags]  
-        }}
+        }},
+      sort=sort
     )
-
 
   elif name != False and tags != False:
     spreadsheet = db_spreadsheet.find(
@@ -323,7 +330,14 @@ def searchSpreadsheet_name():
         'name': re.compile(name, re.IGNORECASE),
         'tags':{
         '$all':[re.compile(i,re.IGNORECASE) for i in tags]  
-        }}
+        }},
+      sort=sort
+    )
+  
+  elif name == False and tags == False:
+    spreadsheet = db_spreadsheet.find(
+      filter={},
+      sort=sort
     )
   
   if spreadsheet != 0:
