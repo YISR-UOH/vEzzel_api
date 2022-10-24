@@ -10,7 +10,7 @@ class Spreadsheet:
     self.description = description
     self.content = content
     self.tags = tags
-    self.username = username,
+    self.username = username
     now = datetime.now()
     self.last_modified = now.strftime("%Y%m%d%H%M%S")
   

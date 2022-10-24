@@ -1,5 +1,6 @@
 from distutils.log import error
 from email import message
+import email
 from http import client
 from urllib import response
 from flask import Flask, request, Response, jsonify, render_template
@@ -11,8 +12,15 @@ from api.spreadsheet import Spreadsheet
 from pymongo import MongoClient
 import os
 from datetime import datetime
+from faker import Faker
+import random
 
+
+fake = Faker()
 app = Flask(__name__)
+
+#mongodb+srv://vEzzel:v3zzel_Web_Company@vezzel.lgiwpov.mongodb.net/?retryWrites=true&w=majority
+
 MONGO_URI = os.getenv("MONGODB_URI")
 
 client = MongoClient(MONGO_URI)
@@ -149,7 +157,6 @@ def edit_user_pass(id):
   else:
     return error_response(401, pass_strong) 
 
-
 @app.route('/edit_email/<id>', methods=['POST'])  
 def edit_user_email(id):
   '''
@@ -187,7 +194,7 @@ def login():
 @app.route('/spreadsheet/<id>', methods=['POST'])
 def getSpreadsheet(id):
   '''
-    Retorna los Spreadsheet del usuario
+    Retorna las Spreadsheet del usuario
   '''
   if db_user.find_one({'_id':ObjectId(id)}):
     #verify if the user exists
@@ -288,7 +295,7 @@ def searchSpreadsheet_name():
   name,tags = False,False
   #tiene que devolver todo por default
   response = []
-  
+  spreadsheet = 0
   if 'name' in request.json:
     #verify if recive the name
     name = request.json['name']
@@ -301,16 +308,6 @@ def searchSpreadsheet_name():
     spreadsheet = db_spreadsheet.find(
       filter={'name': re.compile(name, re.IGNORECASE)}
     )
-    for s in spreadsheet:
-      response.append({
-          '_id': str(s['_id']),
-          'name': s['name'],
-          'user_id': s['user_id'],
-          'description': s['description'],
-          'content': s['content'],
-          'tags': s['tags'],
-          'tracker': s['tracker']
-      })
     
   elif name == False and tags != False:
     spreadsheet = db_spreadsheet.find(
@@ -318,16 +315,7 @@ def searchSpreadsheet_name():
         '$all':[re.compile(i,re.IGNORECASE) for i in tags]  
         }}
     )
-    for s in spreadsheet:
-      response.append({
-          '_id': str(s['_id']),
-          'name': s['name'],
-          'user_id': s['user_id'],
-          'description': s['description'],
-          'content': s['content'],
-          'tags': s['tags'],
-          'tracker': s['tracker']
-      }) 
+
 
   elif name != False and tags != False:
     spreadsheet = db_spreadsheet.find(
@@ -337,6 +325,8 @@ def searchSpreadsheet_name():
         '$all':[re.compile(i,re.IGNORECASE) for i in tags]  
         }}
     )
+  
+  if spreadsheet != 0:
     for s in spreadsheet:
       response.append({
           '_id': str(s['_id']),
@@ -345,14 +335,41 @@ def searchSpreadsheet_name():
           'description': s['description'],
           'content': s['content'],
           'tags': s['tags'],
+          'username': s['username'],
           "last_modified":str(s["last_modified"])
       })
-  
+
   response = jsonify(response)
   response.status_code = 200
   return response
 
-
+@app.route('/spreadsheet_getlast/<id>', methods=['POST'])
+def getLastSpreadsheet(id):
+  '''
+    Obtiene el último spreadsheet modificado
+  '''
+  if db_user.find_one({'_id':ObjectId(id)}):
+    #verify if the user exists
+    last_modified = db_user.find_one({'_id':ObjectId(id)})['last_modified']
+    if last_modified != '':
+      spreadsheet = db_spreadsheet.find_one({'_id':ObjectId(last_modified)})
+      response = {
+          '_id': str(spreadsheet['_id']),
+          'name': spreadsheet['name'],
+          'user_id': spreadsheet['user_id'],
+          'description': spreadsheet['description'],
+          'content': spreadsheet['content'],
+          'tags': spreadsheet['tags'],
+          'username': spreadsheet['username'],
+          'last_modified': spreadsheet['last_modified']
+      }
+      response = jsonify(response)
+      response.status_code = 200
+      return response
+    else:
+      return error_response(401, 'El usuario no tiene un Spreadsheet modificado')
+  return error_response(401, 'El usuario no existe')
+  
 
 def error_response(error,msg):
   '''
@@ -379,6 +396,44 @@ def good_response(msg):
 
   return resp
 
+
+@app.route('/spreadsheet_random', methods=['POST'])
+def fake_data():
+  '''
+    Crea 10 datos falsos para probar
+  '''
+  names = [fake.unique.first_name() for i in range(10)]
+  emails = [fake.unique.email() for i in range(10)]
+  password = 'Password123'
+  ids = []
+  tags = ['tag1','tag2','tag3','tag4','tag5','tag6','tag7','tag8','tag9','tag10']
+  for i in range(10):
+    user = User(names[i], emails[i], generate_password_hash(password),'')
+    ids.append(str(db_user.insert_one(user.toDBCollection()).inserted_id))
+    
+  
+
+  for j in range(10):
+    desc = [fake.unique.sentence(nb_words=10) for _ in range(10)]
+    
+    tags_spread = [random.sample(tags,random.randint(1,5)) for _ in range(10)]
+    content = ' '
+    title = [fake.unique.sentence(nb_words=3) for _ in range(10)]
+    
+    for i in range(10):
+      description = desc[i]
+      username = names[j]
+      spreadsheet = Spreadsheet(str(ids[j]),title[i], description, content, tags_spread[i], username)
+      s_id = db_spreadsheet.insert_one(spreadsheet.toDBCollection()).inserted_id
+      
+      db_user.update_one({'_id':ObjectId(ids[j])}, {'$set': {'last_sheet': str(s_id)}})
+    
+  response = jsonify({
+      'status': 200      
+  })
+  response.status_code = 200
+  return response
+  
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
 
