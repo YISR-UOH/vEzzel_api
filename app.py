@@ -350,7 +350,7 @@ def getLastSpreadsheet(id):
   '''
   if db_user.find_one({'_id':ObjectId(id)}):
     #verify if the user exists
-    last_modified = db_user.find_one({'_id':ObjectId(id)})['last_modified']
+    last_modified = db_user.find_one({'_id':ObjectId(id)})['last_sheet']
     if last_modified != '':
       spreadsheet = db_spreadsheet.find_one({'_id':ObjectId(last_modified)})
       response = {
