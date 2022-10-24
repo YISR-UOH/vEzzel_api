@@ -13,11 +13,13 @@ from pymongo import MongoClient
 import os
 from datetime import datetime
 from faker import Faker
+from flask_cors import CORS
 import random
 
 
 fake = Faker()
 app = Flask(__name__)
+CORS(app)
 
 #mongodb+srv://vEzzel:v3zzel_Web_Company@vezzel.lgiwpov.mongodb.net/?retryWrites=true&w=majority
 
