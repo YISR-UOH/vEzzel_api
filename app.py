@@ -114,7 +114,7 @@ def create_user():
     #verify if the password is strong  
     if username and email and password:
       hashed_password = generate_password_hash(password)
-      user = User(username, email, hashed_password,'')
+      user = User(username, email, hashed_password,' ')
       id = db_user.insert_one(user.toDBCollection()).inserted_id
       response = jsonify({
           'id': str(id),
@@ -446,11 +446,14 @@ def fake_data():
     ids.append(str(db_user.insert_one(user.toDBCollection()).inserted_id))
     
   
-  content = db_spreadsheet.find_one({'_id':ObjectId("")})["content"]
+  contents = [db_spreadsheet.find_one({'_id':ObjectId("6358180e6aed96bb809df8d4")})["content"],db_spreadsheet.find_one({'_id':ObjectId("63581879d4be9d8a5e95a419")})["content"]]
+  
   for j in range(10):
     desc = [fake.unique.sentence(nb_words=10) for _ in range(10)]
     
     tags_spread = [random.sample(tags,random.randint(1,5)) for _ in range(10)]
+    content = [random.sample(contents,random.randint(1)) for _ in range(10)]
+    
     title = [fake.unique.sentence(nb_words=3) for _ in range(10)]
     
     for i in range(10):
