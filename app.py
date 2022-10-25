@@ -23,12 +23,14 @@ CORS(app)
 
 #mongodb+srv://vEzzel:v3zzel_Web_Company@vezzel.lgiwpov.mongodb.net/?retryWrites=true&w=majority
 
+#os.getenv("MONGODB_URI")
+
 MONGO_URI = os.getenv("MONGODB_URI")
 
 client = MongoClient(MONGO_URI)
 db = client.vEzzel
-db_spreadsheet = db['spreadsheet']
-db_user = db['test']
+db_spreadsheet = db['spreads']
+db_user = db['users']
 
 sort=list({
     'last_modified': -1
@@ -444,12 +446,11 @@ def fake_data():
     ids.append(str(db_user.insert_one(user.toDBCollection()).inserted_id))
     
   
-
+  content = db_spreadsheet.find_one({'_id':ObjectId("")})["content"]
   for j in range(10):
     desc = [fake.unique.sentence(nb_words=10) for _ in range(10)]
     
     tags_spread = [random.sample(tags,random.randint(1,5)) for _ in range(10)]
-    content = ' '
     title = [fake.unique.sentence(nb_words=3) for _ in range(10)]
     
     for i in range(10):
