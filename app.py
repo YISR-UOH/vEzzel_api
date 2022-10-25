@@ -270,7 +270,17 @@ def editSpreadsheet(id, spread_id):
       
       return response
     else:
-      return error_response(401, 'El Spreadsheet no existe')
+      #verify if the user exists
+      username = db_user.find_one({'_id':ObjectId(id)})['username']
+      spreadsheet = Spreadsheet(str(id),name, description, content, tags, username)
+      s_id = db_spreadsheet.insert_one(spreadsheet.toDBCollection()).inserted_id
+      
+      db_user.update_one({'_id':ObjectId(id)}, {'$set': {'last_sheet': str(s_id)}})
+      
+      response = jsonify({'id': str(s_id),'status': 200})
+      response.status_code = 200
+      
+      return response
   
   else:
     return error_response(401, 'El usuario no existe')
