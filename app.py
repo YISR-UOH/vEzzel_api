@@ -237,10 +237,12 @@ def saveSpreadsheet(id):
     spreadsheet = Spreadsheet(str(id),name, description, content, tags, username)
     s_id = db_spreadsheet.insert_one(spreadsheet.toDBCollection()).inserted_id
     
-    db_user.update_one({'_id':ObjectId(id)}, {'$set': {'last_modified': str(s_id)}})
+    db_user.update_one({'_id':ObjectId(id)}, {'$set': {'last_sheet': str(s_id)}})
     
-    msg = 'El Spreadsheet ha sido guardado'
-    return good_response(msg)
+    response = jsonify({'id': str(s_id),'status': 200})
+    response.status_code = 200
+    
+    return response
   return error_response(401, 'El usuario no existe')
 
 @app.route('/spreadsheet_edit/<id>/<spread_id>', methods=['POST'])
@@ -257,12 +259,16 @@ def editSpreadsheet(id, spread_id):
       content = request.json['content']
       tags = request.json['tags']
       now = datetime.now()
-      date_time = now.strftime("%Y%m%d%H%M%S")
+      date_time = now.strftime("%Y%m%d%H%M%S%f")
+      
       db_spreadsheet.update_one({'_id':ObjectId(spread_id)}, {'$set': {'name': name, 'description': description, 'content': content, 'tags': tags, "last_modified": date_time}})
       
-      db_user.update_one({'_id':ObjectId(id)}, {'$set': {'last_modified': str(spread_id)}})
+      db_user.update_one({'_id':ObjectId(id)}, {'$set': {'last_sheet': str(spread_id)}})
       
-      return good_response('El Spreadsheet ha sido actualizado')
+      response = jsonify({'id': str(spread_id),'status': 200})
+      response.status_code = 200
+      
+      return response
     else:
       return error_response(401, 'El Spreadsheet no existe')
   
@@ -281,8 +287,8 @@ def deleteSpreadsheet(id, spread_id):
       #verify if the user and spreadsheet exists
       db_spreadsheet.delete_one({'_id':ObjectId(spread_id)})
       
-      if db_user.find_one({'_id':ObjectId(id)})['last_modified'] == str(spread_id):
-        db_user.update_one({'_id':ObjectId(id)}, {'$set': {'last_modified': ''}})
+      if db_user.find_one({'_id':ObjectId(id)})['last_sheet'] == str(spread_id):
+        db_user.update_one({'_id':ObjectId(id)}, {'$set': {'last_sheet': ''}})
       
       msg = 'El Spreadsheet ha sido eliminado'
       return good_response(msg)
