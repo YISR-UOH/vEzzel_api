@@ -452,14 +452,14 @@ def fake_data():
     desc = [fake.unique.sentence(nb_words=10) for _ in range(10)]
     
     tags_spread = [random.sample(tags,random.randint(1,5)) for _ in range(10)]
-    content = [random.sample(contents,random.randint(1)) for _ in range(10)]
+    content = [random.sample(contents,random.randint(1,1)) for _ in range(10)]
     
     title = [fake.unique.sentence(nb_words=3) for _ in range(10)]
     
     for i in range(10):
       description = desc[i]
       username = names[j]
-      spreadsheet = Spreadsheet(str(ids[j]),title[i], description, content, tags_spread[i], username)
+      spreadsheet = Spreadsheet(str(ids[j]),title[i], description, content[i][0], tags_spread[i], username)
       s_id = db_spreadsheet.insert_one(spreadsheet.toDBCollection()).inserted_id
       
       db_user.update_one({'_id':ObjectId(ids[j])}, {'$set': {'last_sheet': str(s_id)}})
