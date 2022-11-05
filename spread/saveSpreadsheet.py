@@ -9,7 +9,7 @@ def spread_saveSpreadsheet(id):
   '''
     Guarda un Spreadsheet
   '''
-  db_spreadsheet,db_user = db.dbconection()
+  db_spreadsheet,db_user,db_comm = db.dbconection()
   if db_user.find_one({'_id':ObjectId(id)}):
     #verify if the user exists
     name = request.json['name']

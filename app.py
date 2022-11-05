@@ -1,5 +1,4 @@
 from flask import Flask, render_template
-import os
 from flask_cors import CORS
 
 from utils.fake_data import utils_fake_data
@@ -18,6 +17,12 @@ from spread.deleteSpreadsheet import spread_deleteSpreadsheet
 from spread.searchSpreadsheet_name import spread_searchSpreadsheet_name
 from spread.getLastSpreadsheet import spread_getLastSpreadsheet
 
+from comments.createComm import com_createComm
+from comments.deleteComm import com_deleteComm
+from comments.editComm import com_editComm
+from comments.getSpreadComm import com_getSpreadComm 
+from comments.getUserComm import com_getUserComm
+from comments.getUserSpreadComm import com_getUserSpreadComm
 
 app = Flask(__name__)
 CORS(app)
@@ -70,6 +75,29 @@ def searchSpreadsheet_name(): return spread_searchSpreadsheet_name()
 
 @app.route('/spreadsheet_getlast/<id>', methods=['POST'])
 def getLastSpreadsheet(id):return spread_getLastSpreadsheet(id)
+
+
+
+# rutas de comentarios
+@app.route('/createComm/<id>/<spread_id>', methods=['POST'])
+def createComm(id, spread_id): return com_createComm(id, spread_id)
+
+@app.route('/deleteComm/<id>/<spread_id>/<comm_id>', methods=['POST'])
+def deleteComm(id, spread_id, comm_id): return com_deleteComm(id, spread_id, comm_id)
+
+@app.route('/editComm/<id>/<spread_id>/<comm_id>', methods=['POST'])
+def editComm(id, spread_id, comm_id): return com_editComm(id, spread_id, comm_id)
+
+@app.route('/getSpreadComm/<spread_id>', methods=['POST'])
+def getSpreadComm(spread_id): return com_getSpreadComm(spread_id)
+
+@app.route('/getUserComm/<id>', methods=['POST'])
+def getUserComm(id): return com_getUserComm(id)
+
+@app.route('/getUserSpreadComm/<id>/<spread_id>', methods=['POST'])
+def getUserSpreadComm(id, spread_id): return com_getUserSpreadComm(id, spread_id)
+
+
 
 
 # Ruta para generar datos falsos

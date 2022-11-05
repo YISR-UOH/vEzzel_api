@@ -7,7 +7,7 @@ def spread_getLastSpreadsheet(id):
   '''
     Obtiene el último spreadsheet modificado
   '''
-  db_spreadsheet,db_user = db.dbconection()
+  db_spreadsheet,db_user,db_comm = db.dbconection()
   if db_user.find_one({'_id':ObjectId(id)}):
     #verify if the user exists
     last_modified = db_user.find_one({'_id':ObjectId(id)})['last_sheet']
@@ -20,6 +20,7 @@ def spread_getLastSpreadsheet(id):
           'description': spreadsheet['description'],
           'content': spreadsheet['content'],
           'tags': spreadsheet['tags'],
+          'score': spreadsheet['score'],
           'username': spreadsheet['username'],
           'last_modified': spreadsheet['last_modified']
       }

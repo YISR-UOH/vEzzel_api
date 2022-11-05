@@ -11,7 +11,7 @@ def users_edit_user_pass(id):
   '''
     Edita el parametro password del usuario
   '''    
-  db_spreadsheet,db_user = db.dbconection()
+  db_spreadsheet,db_user,db_comm = db.dbconection()
   password = request.json['password']
   if check_password_hash(db_user.find_one({'_id':ObjectId(id)})['password'],password):
     #verify if the password is the same

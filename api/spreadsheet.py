@@ -11,6 +11,7 @@ class Spreadsheet:
     self.content = content
     self.tags = tags
     self.username = username
+    self.score = 0
     now = datetime.now()
     self.last_modified = now.strftime("%Y%m%d%H%M%S%f")
   
@@ -25,5 +26,6 @@ class Spreadsheet:
       "content": self.content,
       "tags": self.tags,
       "username": self.username,
+      "score": self.score,
       "last_modified": self.last_modified
     }

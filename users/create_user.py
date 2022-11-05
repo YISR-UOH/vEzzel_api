@@ -10,7 +10,7 @@ def users_create_user():
     Crea un usuario en la base de datos, si no existe ya un usuario con el mismo nombre de usuario o email;
     verifica que la contraseña tenga al menos 8 caracteres, un dígito, una letra mayúscula y una letra minúscula
   '''
-  db_spreadsheet,db_user = db.dbconection()
+  db_spreadsheet,db_user,db_comm = db.dbconection()
   val = True
   msg = {}
   username = request.json['username']

@@ -12,5 +12,6 @@ def dbconection():
   db = client.vEzzel
   db_spreadsheet = db['spreads']
   db_user = db['users']
-  return db_spreadsheet, db_user
+  db_comm = db['comments']
+  return db_spreadsheet, db_user, db_comm
     

@@ -7,7 +7,7 @@ def users_edit_user_email(id):
   '''
     Edita el parametro email del usuario
   '''    
-  db_spreadsheet,db_user = db.dbconection()
+  db_spreadsheet,db_user,db_comm = db.dbconection()
   email = request.json['email']
   if email == db_user.find_one({'_id':ObjectId(id)})['email']:
     #verify if the email is the same
