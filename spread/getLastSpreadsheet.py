@@ -10,10 +10,10 @@ def spread_getLastSpreadsheet(id):
   db_spreadsheet,db_user,db_comm = db.dbconection()
   if db_user.find_one({'_id':ObjectId(id)}):
     #verify if the user exists
-    
-    if db_user.find_one({'_id':ObjectId(id)})['last_sheet']:
+    last_modified = db_user.find_one({'_id':ObjectId(id)})['last_sheet']
+    if last_modified!=' ':
       #verify if the user has a last sheet
-      last_modified = db_user.find_one({'_id':ObjectId(id)})['last_sheet']
+      
       spreadsheet = db_spreadsheet.find_one({'_id':ObjectId(last_modified)})
       response = {
           '_id': str(spreadsheet['_id']),

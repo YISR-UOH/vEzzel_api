@@ -13,7 +13,7 @@ def spread_deleteSpreadsheet(id, spread_id):
       
       
       if db_user.find_one({'_id':ObjectId(id)})['last_sheet'] == str(spread_id):
-        db_user.update_one({'_id':ObjectId(id)}, {'$set': {'last_sheet': ''}})
+        db_user.update_one({'_id':ObjectId(id)}, {'$set': {'last_sheet': ' '}})
       db_comm.delete_many({'spread_id':spread_id})
       db_spreadsheet.delete_one({'_id':ObjectId(spread_id)})
       msg = 'El Spreadsheet ha sido eliminado'
