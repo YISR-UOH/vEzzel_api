@@ -11,9 +11,9 @@ def spread_getLastSpreadsheet(id):
   if db_user.find_one({'_id':ObjectId(id)}):
     #verify if the user exists
     
-    last_modified = db_user.find_one({'_id':ObjectId(id)})['last_sheet']
-    
-    if last_modified != '':
+    if db_user.find_one({'_id':ObjectId(id)})['last_sheet']:
+      #verify if the user has a last sheet
+      last_modified = db_user.find_one({'_id':ObjectId(id)})['last_sheet']
       spreadsheet = db_spreadsheet.find_one({'_id':ObjectId(last_modified)})
       response = {
           '_id': str(spreadsheet['_id']),
