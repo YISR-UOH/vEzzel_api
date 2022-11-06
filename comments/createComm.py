@@ -24,8 +24,9 @@ def com_createComm(id, spread_id):
       
       
       
-      spread = db_comm.find({'spread_id':spread_id})
-      if spread.count() > 0:
+      
+      if db_comm.find({'spread_id':spread_id}):
+        spread = db_comm.find({'spread_id':spread_id})
         aux = 0
         n = 1
         for s in spread:

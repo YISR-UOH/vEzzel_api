@@ -20,10 +20,8 @@ def com_editComm(id, spread_id,comm_id):
       
       score_last = db_comm.find_one({'_id':ObjectId(comm_id)})['score']
       
-
-      
-      spread = db_comm.find({'spread_id':spread_id})
-      if spread:
+      if db_comm.find({'spread_id':spread_id}):
+        spread = db_comm.find({'spread_id':spread_id})
         aux = 0
         n = 1
         for s in spread:
