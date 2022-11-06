@@ -28,11 +28,11 @@ def com_createComm(id, spread_id):
       if db_comm.find({'spread_id':spread_id}):
         spread = db_comm.find({'spread_id':spread_id})
         aux = 0
-        n = 1
+        n = 0
         for s in spread:
           aux+=s['score']
           n+=1
-        spread_score = ((aux*n)+ score)/n
+        spread_score = ((aux)+ score)/(n+1)
       else:
         spread_score = score
       

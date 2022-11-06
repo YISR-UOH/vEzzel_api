@@ -23,12 +23,15 @@ def com_editComm(id, spread_id,comm_id):
       if db_comm.find({'spread_id':spread_id}):
         spread = db_comm.find({'spread_id':spread_id})
         aux = 0
-        n = 1
+        n = 0
         for s in spread:
           aux+=s['score']
           n+=1
-        spread_score = ((aux*n)- score_last)/n
-        spread_score = ((spread_score*n)+ score)/n
+        spread_score = ((aux)- score_last)/(n)
+        if n==1:
+          spread_score = ((spread_score)+ score)
+        else:
+          spread_score = ((spread_score*n)+ score)/(n)
       else:
         spread_score = score
         
