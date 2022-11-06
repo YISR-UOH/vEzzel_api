@@ -25,7 +25,7 @@ def com_editComm(id, spread_id,comm_id):
       spread = db_comm.find({'spread_id':spread_id})
       if spread:
         aux = 0
-        n = 0
+        n = 1
         for s in spread:
           aux+=s['score']
           n+=1
