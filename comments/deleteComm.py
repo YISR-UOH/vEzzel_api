@@ -19,8 +19,7 @@ def com_deleteComm(id, spread_id,comm_id):
         spread_score = spread_score
       else:
         spread_score = (spread_score*2)- score
-      
-      db_spreadsheet.update_one({'_id':ObjectId(spread_id)}, {'$set': {'score': spread_score}})
+        db_spreadsheet.update_one({'_id':ObjectId(spread_id)}, {'$set': {'score': spread_score}})
       db_comm.delete_one({'_id':ObjectId(comm_id)})
       msg = 'Se ha eliminado el comentario'
       return good_response(msg)
