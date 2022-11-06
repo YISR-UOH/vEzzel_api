@@ -14,8 +14,9 @@ def users_login():
   if db_user.find_one({'email':email}) and check_password_hash(db_user.find_one({'email':email})['password'],password):
     #verify if the email and password are correct
     
-    user = db_user.find({'email':email})
-    response = jsonify({'id': str(user._id),"username":user.username,'status': 200})
+    username = db_user.find_one({'email':email})['username']
+    user_id = db_user.find_one({'email':email})['_id']
+    response = jsonify({'id': str(user_id),"username":username,'status': 200})
     response.status_code = 200
     return response
   
