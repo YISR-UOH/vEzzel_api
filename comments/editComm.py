@@ -23,10 +23,11 @@ def com_editComm(id, spread_id,comm_id):
       db_comm.update_one({'_id':ObjectId(comm_id)}, {'$set': {'comment': comment, 'score': score, 'last_modified': date_time}})
       
       spread_score = db_spreadsheet.find({'_id':ObjectId(spread_id)})['score']
+      print(spread_score)
       aux = 0
       n = len(spread_score)
       for i in spread_score:
-        aux = aux + i.score
+        aux = aux + i
       
       spread_score = ((aux*n)- score_last)/n
       spread_score = ((spread_score*n)+ score)/n
