@@ -12,7 +12,7 @@ def spread_getOneSpread(spread_id):
   if db_spreadsheet.find_one({'_id':ObjectId(spread_id)}):
     #verify if the spread exists
     spreadsheet = db_spreadsheet.find_one({'_id':ObjectId(spread_id)})
-    response.append({
+    response={
           '_id': str(spreadsheet['_id']),
           'name': spreadsheet['name'],
           'user_id': spreadsheet['user_id'],
@@ -22,7 +22,7 @@ def spread_getOneSpread(spread_id):
           'username': spreadsheet['username'],
           "score": spreadsheet['score'],
           'last_modified': spreadsheet['last_modified']
-    })
+    }
     response = jsonify(response)
     response.status_code = 200
     return response
