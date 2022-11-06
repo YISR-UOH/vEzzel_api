@@ -16,7 +16,7 @@ from spread.saveSpreadsheet import spread_saveSpreadsheet
 from spread.deleteSpreadsheet import spread_deleteSpreadsheet
 from spread.searchSpreadsheet_name import spread_searchSpreadsheet_name
 from spread.getLastSpreadsheet import spread_getLastSpreadsheet
-
+from spread.getOneSpread import spread_getOneSpread
 from comments.createComm import com_createComm
 from comments.deleteComm import com_deleteComm
 from comments.editComm import com_editComm
@@ -75,6 +75,10 @@ def searchSpreadsheet_name(): return spread_searchSpreadsheet_name()
 
 @app.route('/spreadsheet_getlast/<id>', methods=['POST'])
 def getLastSpreadsheet(id):return spread_getLastSpreadsheet(id)
+
+@app.route('/getOneSpread/<spread_id>', methods=['POST'])
+def getOneSpread(spread_id):return spread_getOneSpread(spread_id)
+
 
 
 
