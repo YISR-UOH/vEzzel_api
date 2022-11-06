@@ -15,12 +15,11 @@ def com_editComm(id, spread_id,comm_id):
       # verify if the comment exists
       comment = request.json['comment']
       score = request.json['score']
+      score_last = db_comm.find_one({'_id':ObjectId(comm_id)})['score']
       db_comm.update_one({'_id':ObjectId(comm_id)}, {'$set': {'comment': comment, 'score': score}})
       spread_score = db_spreadsheet.find_one({'_id':ObjectId(spread_id)})['score']
-      if spread_score == 0:
-        spread_score = score
-      else:
-        spread_score = (spread_score + score)/2
+      spread_score = (spread_score*2)- score_last
+      spread_score = (spread_score + score)/2
       
       db_spreadsheet.update_one({'_id':ObjectId(spread_id)}, {'$set': {'score': spread_score}})
       
