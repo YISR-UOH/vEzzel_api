@@ -41,6 +41,7 @@ def users_create_user():
       id = db_user.insert_one(user.toDBCollection()).inserted_id
       response = jsonify({
           'id': str(id),
+          'username': username,
           'status': 200
       })
       response.status_code = 200
