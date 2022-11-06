@@ -31,7 +31,7 @@ def com_createComm(id, spread_id):
         aux+=s['score']
         n+=1
       
-      spread_score = ((spread_score*n)+ score)/n
+      spread_score = ((aux*n)+ score)/n
       c_id = db_comm.insert_one(comments.toDBCollection()).inserted_id
       
       db_spreadsheet.update_one({'_id':ObjectId(spread_id)}, {'$set': {'score': spread_score}})

@@ -22,7 +22,7 @@ def com_deleteComm(id, spread_id,comm_id):
         aux+=s['score']
         n+=1
       
-      spread_score = ((spread_score*n)- score)/n
+      spread_score = ((aux*n)- score)/n
 
       
       db_spreadsheet.update_one({'_id':ObjectId(spread_id)}, {'$set': {'score': spread_score}})
