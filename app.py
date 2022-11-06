@@ -9,6 +9,7 @@ from users.edit_user_name import users_edit_user_name
 from users.edit_user_pass import users_edit_user_pass
 from users.edit_user_email import users_edit_user_email
 from users.login import users_login
+from users.deleteUser import users_deleteUser
 
 from spread.getSpread import spread_getSpreadsheet
 from spread.editSpreadsheet import spread_editSpreadsheet
@@ -54,6 +55,9 @@ def edit_user_email(id): return users_edit_user_email(id)
   
 @app.route("/login", methods=["POST"])
 def login():return users_login()
+
+@app.route('/deleteUser/<id>', methods=['POST'])
+def deleteUser(id):return users_deleteUser(id)
 
 
 
