@@ -20,7 +20,7 @@ def com_editComm(id, spread_id,comm_id):
       
       score_last = db_comm.find_one({'_id':ObjectId(comm_id)})['score']
       
-      db_comm.update_one({'_id':ObjectId(comm_id)}, {'$set': {'comment': comment, 'score': score, 'last_modified': date_time}})
+
       
       spread = db_comm.find({'spread_id':spread_id})
       aux = 0
@@ -31,7 +31,7 @@ def com_editComm(id, spread_id,comm_id):
       
       spread_score = ((aux*n)- score_last)/n
       spread_score = ((spread_score*n)+ score)/n
-      
+      db_comm.update_one({'_id':ObjectId(comm_id)}, {'$set': {'comment': comment, 'score': score, 'last_modified': date_time}})
       db_spreadsheet.update_one({'_id':ObjectId(spread_id)}, {'$set': {'score': spread_score}})
       
       response = jsonify({'id': str(comm_id),'status': 200})

@@ -21,7 +21,7 @@ def com_createComm(id, spread_id):
       spreadname = db_spreadsheet.find_one({'_id':ObjectId(spread_id)})['name']
 
       comments = Comments(str(spread_id),str(id), comment, score, username, spreadname)
-      c_id = db_comm.insert_one(comments.toDBCollection()).inserted_id
+      
       
       
       spread = db_comm.find({'spread_id':spread_id})
@@ -32,6 +32,7 @@ def com_createComm(id, spread_id):
         n+=1
       
       spread_score = ((spread_score*n)+ score)/n
+      c_id = db_comm.insert_one(comments.toDBCollection()).inserted_id
       
       db_spreadsheet.update_one({'_id':ObjectId(spread_id)}, {'$set': {'score': spread_score}})
       
