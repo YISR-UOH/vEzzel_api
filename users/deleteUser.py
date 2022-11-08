@@ -15,6 +15,9 @@ def users_deleteUser(id):
     
     
     db_comm.delete_many({'user_id': id})
+    spreads_user = db_spreadsheet.find({'user_id': id})
+    for spread in spreads_user:
+      db_comm.delete_many({'spread_id': str(spread['_id'])})
     db_spreadsheet.delete_many({'user_id': id})
     db_user.delete_one({'_id': ObjectId(id)})
     
