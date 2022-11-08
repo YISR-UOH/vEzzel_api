@@ -20,6 +20,8 @@ def users_edit_user_name(id):
       return error_response(401, 'El nombre de usuario ya existe')
     else:
       db_user.update_one({'_id':ObjectId(id)}, {'$set': {'username': username}})
+      db_spreadsheet.update_many({'user_id':id}, {'$set': {'username': username}})
+      db_comm.update_many({'user_id':id}, {'$set': {'username': username}})
       msg = 'El nombre de usuario ha sido actualizado'
       
       return good_response(msg)
