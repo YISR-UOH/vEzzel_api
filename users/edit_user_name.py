@@ -12,7 +12,7 @@ def users_edit_user_name(id):
   db_spreadsheet,db_user,db_comm = db.dbconection()
   if request.json['username']:
     username = request.json['username']
-    if username == db_user.find_one({'_id':  ObjectId(id)})['username']:
+    if username == db_user.find_one({'_id':ObjectId(id)})['username']:
       #verify if the username is the same
       return error_response(401, 'El nombre de usuario no puede ser el mismo')
     if username == db_user.find_one({'username': username}):
