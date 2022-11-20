@@ -41,7 +41,7 @@ def chat_saveChat():
     chat = Chat(user1_id, user1_name, user2_id, user2_name, msg)
     chat_id = db_chats.insert_one(chat.toDBCollection()).inserted_id
     
-    response = jsonify({'id': str(chat_id),'status': 200})
+    response = jsonify({'status': 200})
     response.status_code = 200
     
     return response
