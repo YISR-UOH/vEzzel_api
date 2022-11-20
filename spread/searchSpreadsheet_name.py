@@ -9,7 +9,7 @@ def spread_searchSpreadsheet_name():
   sort=list({
       'last_modified': -1
   }.items())
-  db_spreadsheet,db_user,db_comm = db.dbconection()
+  db_spreadsheet, db_user, db_comm, db_chats = db.dbconection()
   name,tags = False,False
   #tiene que devolver todo por default
   response = []

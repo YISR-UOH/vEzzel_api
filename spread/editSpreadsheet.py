@@ -10,7 +10,7 @@ def spread_editSpreadsheet(id, spread_id):
     Edita un spreadsheet
   '''
 
-  db_spreadsheet,db_user,db_comm = db.dbconection()
+  db_spreadsheet, db_user, db_comm, db_chats = db.dbconection()
   if db_user.find_one({'_id':ObjectId(id)}):
     if db_spreadsheet.find_one({'_id':ObjectId(spread_id), 'user_id':str(id)}):
       #verify if the user and spreadsheet exists

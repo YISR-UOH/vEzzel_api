@@ -12,7 +12,7 @@ def utils_fake_data():
   '''
     Crea 10 datos falsos para probar
   '''
-  db_spreadsheet,db_user,db_comm = db.dbconection()
+  db_spreadsheet, db_user, db_comm, db_chats = db.dbconection()
   names = [fake.unique.first_name() for i in range(10)]
   emails = [fake.unique.email() for i in range(10)]
   password = 'Password123'

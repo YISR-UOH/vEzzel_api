@@ -11,7 +11,7 @@ def com_getSpreadComm(spread_id):
   sort=list({
       'last_modified': -1
   }.items())
-  db_spreadsheet,db_user,db_comm = db.dbconection()
+  db_spreadsheet, db_user, db_comm, db_chats = db.dbconection()
   if db_spreadsheet.find_one({'_id':ObjectId(spread_id)}):
     # verify if the spread exists
     

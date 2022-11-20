@@ -25,6 +25,9 @@ from comments.getSpreadComm import com_getSpreadComm
 from comments.getUserComm import com_getUserComm
 from comments.getUserSpreadComm import com_getUserSpreadComm
 
+from chat.getAllChat import chat_getAllChat
+from chat.saveChat import chat_saveChat
+
 app = Flask(__name__)
 CORS(app)
 
@@ -106,6 +109,14 @@ def getUserComm(id): return com_getUserComm(id)
 def getUserSpreadComm(id, spread_id): return com_getUserSpreadComm(id, spread_id)
 
 
+
+
+# rutas de chat
+@app.route('/getAllChat', methods=['POST'])
+def getAllChat(): return chat_getAllChat()
+
+@app.route('/saveChat', methods=['POST'])
+def saveChat(): return chat_saveChat()
 
 
 # Ruta para generar datos falsos

@@ -8,7 +8,7 @@ def com_getUserSpreadComm(id,spread_id):
   '''
     Obtiene el comentario del usuario de un spreadsheet
   '''
-  db_spreadsheet,db_user,db_comm = db.dbconection()
+  db_spreadsheet, db_user, db_comm, db_chats = db.dbconection()
   if db_user.find_one({'_id':ObjectId(id)}):
     #verify if the user exists
     if db_spreadsheet.find_one({'_id':ObjectId(spread_id)}):

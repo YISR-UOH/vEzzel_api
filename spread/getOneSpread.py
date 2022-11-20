@@ -8,7 +8,7 @@ def spread_getOneSpread(spread_id):
     Retorna la Spreadsheet 
   '''
 
-  db_spreadsheet,db_user,db_comm = db.dbconection()
+  db_spreadsheet, db_user, db_comm, db_chats = db.dbconection()
   if db_spreadsheet.find_one({'_id':ObjectId(spread_id)}):
     #verify if the spread exists
     spreadsheet = db_spreadsheet.find_one({'_id':ObjectId(spread_id)})

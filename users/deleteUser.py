@@ -8,7 +8,7 @@ def users_deleteUser(id):
   '''
     Elimina al usuario y todo lo relacionado a el
   '''
-  db_spreadsheet,db_user,db_comm = db.dbconection()
+  db_spreadsheet, db_user, db_comm, db_chats = db.dbconection()
 
   if db_user.find_one({'_id': ObjectId(id)}): 
     #verify if the user already exists

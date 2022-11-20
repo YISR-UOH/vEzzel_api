@@ -5,7 +5,7 @@ def users_getAll():
   '''
     Lista todos los usuarios
   '''
-  db_spreadsheet,db_user,db_comm = db.dbconection()
+  db_spreadsheet, db_user, db_comm, db_chats = db.dbconection()
   users = []
   for doc in db_user.find():
       users.append({

@@ -13,5 +13,6 @@ def dbconection():
   db_spreadsheet = db['spreads']
   db_user = db['users']
   db_comm = db['comments']
-  return db_spreadsheet, db_user, db_comm
+  db_chats = db['chats']
+  return db_spreadsheet, db_user, db_comm, db_chats
     
