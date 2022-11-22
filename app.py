@@ -146,6 +146,6 @@ def disconnected():
     emit("disconnect",f"user {request.sid} disconnected",broadcast=True)
 
 if __name__ == '__main__':
-  socketio.run(app, port=5000)
+  socketio.run(app,debug=True, port=5000)
   
 
