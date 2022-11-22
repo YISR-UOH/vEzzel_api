@@ -4,7 +4,6 @@ from api.user import User
 from utils.passcheck import password_check
 from werkzeug.security import generate_password_hash
 from utils.response import error_response
-
 def users_create_user():
   '''
     Crea un usuario en la base de datos, si no existe ya un usuario con el mismo nombre de usuario o email;

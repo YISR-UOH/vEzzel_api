@@ -1,7 +1,7 @@
 from datetime import datetime
 
 class Chat:
-  def __init__(self,user1_id,user1_name,user2_id,user2_name, msg):
+  def __init__(self,user1_id,user1_name,user2_id,user2_name, msg,time):
     '''
       Constructor de la clase Spreadsheet
     '''
@@ -10,8 +10,7 @@ class Chat:
     self.user2_id = user2_id
     self.user2_name = user2_name
     self.msg = msg
-    now = datetime.now()
-    self.time = now.strftime("%Y%m%d%H%M%S%f")
+    self.time = time
   
   def toDBCollection(self):
     '''
@@ -19,6 +18,6 @@ class Chat:
     '''
     return {
       "users": [[self.user1_id,self.user1_name],[self.user2_id,self.user2_name]],
-      "msg": [[self.user1_id,self.msg,self.time]],
+      "msg": [[self.user1_id,self.user2_id,self.msg,self.time]],
       "time": self.time
     }

@@ -1,6 +1,6 @@
 import db
 from flask import jsonify, request
-
+from bson.objectid import ObjectId
 def chat_getAllChat():
   '''
     Retorna todos los chat del usuario
@@ -8,7 +8,7 @@ def chat_getAllChat():
   db_spreadsheet, db_user, db_comm, db_chats = db.dbconection()
 
   user1_id = request.json['user1_id']
-  user1_name = request.json['user1_name'] 
+  user1_name = db_user.find_one({'_id':ObjectId(user1_id)})['username']
   
   filter={
     'users': {
@@ -29,6 +29,7 @@ def chat_getAllChat():
       response = []
       for s in chats:
         response.append({
+            '_id': str(s['_id']),
             'users': s['users'],
             'msg': s['msg'],
             'time': s['time']

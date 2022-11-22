@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request,jsonify
 from flask_cors import CORS
 
 from utils.fake_data import utils_fake_data
@@ -27,9 +27,14 @@ from comments.getUserSpreadComm import com_getUserSpreadComm
 
 from chat.getAllChat import chat_getAllChat
 from chat.saveChat import chat_saveChat
+from chat.createChat import chat_createChat
+from flask_socketio import SocketIO,emit
 
 app = Flask(__name__)
-CORS(app)
+app.config['SECRET_KEY'] = 'secret!'
+CORS(app,resources={r"/*":{"origins":"*"}})
+socketio = SocketIO(app, cors_allowed_origins="*")
+
 
 # Pagina de inicio
 @app.route('/')
@@ -118,13 +123,29 @@ def getAllChat(): return chat_getAllChat()
 @app.route('/saveChat', methods=['POST'])
 def saveChat(): return chat_saveChat()
 
-
-# Ruta para generar datos falsos
-@app.route('/spreadsheet_random', methods=['POST'])
-def fake_data(): return utils_fake_data()
-
+@app.route('/createChat', methods=['POST'])
+def createChat(): return chat_createChat()
+@socketio.on('connection')
+def chat_connection(data):
+    """event listener when client connects to the server"""
+    
+    print("client has connected")
+    emit("connect",{"data":f"id: {request.sid} is connected"})
+    
+@socketio.on('data')
+def handle_message(data):
+    """event listener when client types a message"""
+    print("data from the front end: ",str(data))
+    chat_saveChat(data)
+    emit("data",{'data':data,'id':request.sid},broadcast=True)
+    
+@socketio.on("disconnect")
+def disconnected():
+    """event listener when client disconnects to the server"""
+    print("user disconnected")
+    emit("disconnect",f"user {request.sid} disconnected",broadcast=True)
 
 if __name__ == '__main__':
-  app.run(threaded=True, port=5000)
+  socketio.run(app,debug=True, port=5000)
   
 
