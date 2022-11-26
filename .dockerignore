@@ -1,0 +1,9 @@
+# flyctl launch added from .gitignore
+
+**\api\__pycache__\spreadsheet.cpython-310.pyc
+**\api\__pycache__\user.cpython-310.pyc
+**\*.pyc
+**\*.pyc
+**\*.pyc
+**\*.pyc
+**\*.pyc

@@ -20,7 +20,7 @@ def chat_getAllChat():
     }
   }
   sort=list({
-    'time': -1
+    'time': 1
   }.items())
   
   if db_chats.find_one(filter=filter):
